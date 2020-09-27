@@ -1,8 +1,8 @@
 class MavenSnapshot < Formula
     desc "Java-based project management (latest snapshot)"
     homepage "https://maven.apache.org/"
-    
-    version :latest
+
+    version 'latest'
     sha256 :no_check
 
     depends_on "openjdk"
