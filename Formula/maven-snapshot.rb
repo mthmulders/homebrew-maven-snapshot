@@ -5,39 +5,56 @@ class MavenSnapshot < Formula
     depends_on "openjdk"
 
     url do
-        require 'net/http'
-        require 'json'
-        
-        jenkins_base_url = 'https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/'
-        jenkins_builds_url = "#{jenkins_base_url}/api/json"
-        response = Net::HTTP.get(URI(jenkins_builds_url))
-        builds = JSON.parse(response)['builds']
-        
-        builds.each do |build|
-            build_num = build['number']
-            puts "Inspecting build #{build_num}"
-            jenkins_build_url = "#{jenkins_base_url}/#{build_num}/api/json"
-        
-            response = Net::HTTP.get(URI(jenkins_build_url))
-            build_details = JSON.parse(response)
-            build_result = build_details['result']
-            if "SUCCESS" == build_result then
-                artifacts = build_details['artifacts']
-                artifacts.each do |artifact|
-                    file_name = artifact['fileName']
-                    
-                    if file_name.match(/^apache\-maven\-[^wrapper].*-bin\.tar\.gz$/)
-                        relative_path = artifact['relativePath']
-                        artifact_url = "#{jenkins_base_url}/#{build_num}/artifact/#{relative_path}"
-                        puts "Artifact #{file_name} available at #{artifact_url}"
-                        return artifact_url
-                    end
-                end
-                return
-            else
-                puts "Skipping build #{build['number']} as it is #{build_result}"
-            end
+      require_relative "../lib/jenkins"
+    end
+
+    # Copied from the official Maven formula 
+    def install
+        # Remove windows files
+        rm_f Dir["bin/*.cmd"]
+    
+        # Fix the permissions on the global settings file.
+        chmod 0644, "conf/settings.xml"
+    
+        libexec.install Dir["*"]
+    
+        # Leave conf file in libexec. The mvn symlink will be resolved and the conf
+        # file will be found relative to it
+        Pathname.glob("#{libexec}/bin/*") do |file|
+          next if file.directory?
+    
+          basename = file.basename
+          next if basename.to_s == "m2.conf"
+    
+          (bin/basename).write_env_script file, Language::Java.overridable_java_home_env
         end
-        return nil
+    end
+
+    # Copied from the official Maven formula 
+    test do
+        (testpath/"pom.xml").write <<~EOS
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>org.homebrew</groupId>
+            <artifactId>maven-test</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <properties>
+              <maven.compiler.source>1.8</maven.compiler.source>
+              <maven.compiler.target>1.8</maven.compiler.target>
+              <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+          </project>
+        EOS
+        (testpath/"src/main/java/org/homebrew/MavenTest.java").write <<~EOS
+          package org.homebrew;
+          public class MavenTest {
+            public static void main(String[] args) {
+              System.out.println("Testing Maven with Homebrew!");
+            }
+          }
+        EOS
+        system "#{bin}/mvn", "compile", "-Duser.home=#{testpath}"
     end
 end
