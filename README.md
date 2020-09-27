@@ -1,4 +1,4 @@
-# Mthmulders Maven-snapshot
+# Maven snapshot - Homebrew tap
 
 ## How do I install these formulae?
 `brew install mthmulders/maven-snapshot/<formula>`
