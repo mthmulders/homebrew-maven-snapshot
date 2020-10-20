@@ -1,0 +1,21 @@
+name: update formula
+on:
+  schedule:
+    - cron:  '31 * * * *'
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Inspect recent Jenkins builds
+      shell: bash
+      run: |
+        ./lib/jenkins.rb
+    
+    - name: Update Formula
+      shell: bash
+      run: |
+        git add Formula/maven-snapshot.rb last-build.txt
+        git commit -m "Update to latest Maven snapshot"
+        git push origin master

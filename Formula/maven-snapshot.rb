@@ -1,15 +1,11 @@
 class MavenSnapshot < Formula
     desc "Java-based project management (latest snapshot)"
     homepage "https://maven.apache.org/"
-
-    version 'latest'
-    sha256 :no_check
+    url "to-be-updated"
+    sha256 "to-be-updated"
+    license "Apache-2.0"
 
     depends_on "openjdk"
-
-    url do
-      require_relative "../lib/jenkins"
-    end
 
     # Copied from the official Maven formula 
     def install
