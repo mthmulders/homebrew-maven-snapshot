@@ -11,7 +11,7 @@ jobs:
     - name: Inspect recent Jenkins builds
       shell: bash
       run: |
-        ./lib/jenkins.rb
+        sh ./lib/jenkins.rb
     
     - name: Update Formula
       shell: bash
