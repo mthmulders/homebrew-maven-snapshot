@@ -1,8 +1,10 @@
 #!/usr/bin/ruby
 
-require 'net/http'
 require 'json'
+require 'digest'
+require 'net/http'
 require 'tempfile'
+require 'uri'
 
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
@@ -14,10 +16,24 @@ def download_json(url)
     JSON.parse(response)
 end
 
-def update_formula(formula_file, url)
+def calculate_hash(url)
+    puts "Fetching #{url}"
+    uri = URI.parse(url)
+    host = uri.host.downcase
+    Net::HTTP.start(host) do |http|
+        resp = http.get(uri.path)
+        open("temp.tgz", "wb") do |file|
+            file.write(resp.body)
+        end
+    end
+    return Digest::SHA256.hexdigest File.read "temp.tgz"
+end
+
+def update_formula(formula_file, url, new_hash)
     Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
       File.open(formula_file).each do |line|
         tempfile.puts line.gsub(/(\s*url\s*)".*"$/, '\1' + "\"#{url}\"")
+        tempfile.puts line.gsub(/(\s*sha256\s*)".*"$/, '\1' + "\"#{new_hash}\"")
       end
       tempfile.close
       FileUtils.mv tempfile.path, formula_file
@@ -64,8 +80,11 @@ builds.each do |build|
         url = "#{jenkins_base_url}/#{build["number"]}/artifact/#{artifact["relativePath"]}"
         puts "Artifact location is #{url}"
 
-        puts "Updating formula with new URL: #{url}"
-        update_formula(formula_file, url)
+        puts "Calculating SHA-256 hash"
+        new_hash = calculate_hash(url)
+
+        puts "Updating formula with new URL #{url} and SHA-256 hash #{new_hash}"
+        update_formula(formula_file, url, new_hash)
 
         puts "Updating last inspected build: #{build_num}"
         File.delete(last_build_file) if File.exist?(last_build_file)
