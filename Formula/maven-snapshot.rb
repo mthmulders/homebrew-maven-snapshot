@@ -9,7 +9,7 @@ class MavenSnapshot < Formula
 
   depends_on "openjdk"
 
-  conflicts_with "mvn", because: "also installs a 'mvn' executable"
+  conflicts_with "maven", because: "also installs a 'mvn' executable"
 
   # Copied from the official Maven formula
   def install
