@@ -24,7 +24,10 @@ Instead, please report such feedback at [the Apache Software Foundation JIRA](ht
 Or `brew tap mthmulders/maven-snapshot` and then `brew install maven-snapshot`.
 
 ## Possible improvements
-In order to not request too much data from Jenkins, it might be wise to [control the amount of data we fetch](https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/api/).
+* [ ] In order to not request too much data from Jenkins, it might be wise to [control the amount of data we fetch](https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/api/).
+* [ ] Instead of polling Jenkins for data, it might be more elegant and efficient to _push_ changes to the formula.
+But that requires changes to how Jenkins is working and that might be a bit hard to achieve.
+* [ ] Eventually, this formula might be merged with the [official `maven` formula](https://github.com/Homebrew/homebrew-core/blob/master/Formula/maven.rb), leveraging its `--head` option.
 
 ## Development
 Install [act](https://github.com/nektos/act/).
