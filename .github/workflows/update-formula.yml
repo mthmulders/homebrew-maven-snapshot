@@ -1,21 +1,36 @@
 name: update formula
 on:
   schedule:
-    - cron:  '*/5 * * * *'
+    - cron:  '*/15 * * * *'
 jobs:
   update-formula:
     runs-on: ubuntu-latest
 
     steps:
 
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install Ruby
+      run: |
+        apt-get update
+        apt-get install -y ruby git
+        echo ""
+        ruby -v
+        git --version
+        git config --global user.email "mthmulders@noreply.github.com"
+        git config --global user.name "Maarten Mulders"
+
     - name: Inspect recent Jenkins builds
       shell: bash
       run: |
-        sh ./lib/jenkins.rb
-    
+        ./lib/jenkins.rb
+
+    # See https://github.community/t/how-does-one-commit-from-an-action/16127/2
     - name: Update Formula
       shell: bash
       run: |
+        git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
         git add Formula/maven-snapshot.rb last-build.txt
         git commit -m "Update to latest Maven snapshot"
-        git push origin master
+        git push github HEAD:${GITHUB_REF}
