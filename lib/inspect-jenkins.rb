@@ -33,12 +33,13 @@ def calculate_hash(url)
   hash
 end
 
-def update_formula(formula_file, url, new_hash)
+def update_formula(formula_file, url, new_hash, new_version)
   Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
     File.open(formula_file).each do |line|
       tempfile.puts line
         .gsub(/(\s*url\s*)".*"$/, "\\1\"#{url}\"")
         .gsub(/(\s*sha256\s*)".*"$/, "\\1\"#{new_hash}\"")
+        .gsub(/(\s*version\s*)".*"$/, "\\1\"#{new_version}\"")
     end
     tempfile.close
     FileUtils.mv tempfile.path, formula_file
@@ -64,16 +65,18 @@ IO.foreach(formula_file) do |line|
   current_sha256 = line.match(/\s*sha256\s*"(.*)"$/)[1] if line[/sha256/]
 end
 
-puts "Found    URL \"#{current_url}\""
-puts "Found SHA256 \"#{current_sha256}\""
+puts "Existing    URL \"#{current_url}\""
+puts "Existing SHA256 \"#{current_sha256}\""
 
 builds = job["builds"]
 builds.each do |build|
   build_num = build["number"]
   puts "Inspecting build #{build_num}"
   build_details = download_json("#{jenkins_base_url}/#{build_num}/api/json")
+  status = build_details["result"]
+  puts "... status is #{status}"
 
-  next unless build_details["result"] == "SUCCESS"
+  next unless status == "SUCCESS"
 
   build_details["artifacts"].each do |artifact|
     file_name = artifact["fileName"]
@@ -88,8 +91,11 @@ builds.each do |build|
     puts "Calculating SHA-256 hash"
     new_hash = calculate_hash(url)
 
-    puts "Updating formula with new URL #{url} and SHA-256 hash #{new_hash}"
-    update_formula(formula_file, url, new_hash)
+    puts "Determining version"
+    new_version = url.gsub(/.*apache\-maven\-(.*)\-bin\.tar\.gz/, "\\1")
+
+    puts "Updating formula with version #{new_version}, location #{url} and SHA-256 hash #{new_hash}"
+    update_formula(formula_file, url, new_hash, new_version)
 
     puts "Updating last inspected build: #{build_num}"
     File.delete(last_build_file) if File.exist?(last_build_file)
