@@ -2,7 +2,7 @@ class MavenSnapshot < Formula
   desc "Java-based project management (latest snapshot)"
   homepage "https://maven.apache.org/"
   url "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/40/artifact/org/apache/maven/apache-maven/3.7.0-SNAPSHOT/apache-maven-3.7.0-SNAPSHOT-bin.tar.gz"
-  sha256 "to-be-updated"
+  sha256 "9e67afce6b38e82c98beb38a8e27e3e2bc6ad75fa7fff1c2ff6a191866755836"
   license "Apache-2.0"
 
   depends_on "openjdk"
