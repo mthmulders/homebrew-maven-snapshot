@@ -10,6 +10,7 @@ require "uri"
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
 jenkins_base_url = "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master"
+temp_file = "temp.tgz"
 
 def download_json(url)
   puts "Fetching #{url}"
@@ -23,11 +24,13 @@ def calculate_hash(url)
   host = uri.host.downcase
   Net::HTTP.start(host) do |http|
     resp = http.get(uri.path)
-    File.open("temp.tgz", "wb") do |file|
+    File.open(temp_file, "wb") do |file|
       file.write(resp.body)
     end
   end
-  Digest::SHA256.hexdigest File.read "temp.tgz"
+  hash = Digest::SHA256.hexdigest File.read temp_file
+  File.delete(temp_file)
+  hash
 end
 
 def update_formula(formula_file, url, new_hash)
