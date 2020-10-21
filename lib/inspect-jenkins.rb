@@ -1,62 +1,63 @@
 #!/usr/bin/ruby
+# frozen_string_literal: true
 
-require 'json'
-require 'digest'
-require 'net/http'
-require 'tempfile'
-require 'uri'
+require "json"
+require "digest"
+require "net/http"
+require "tempfile"
+require "uri"
 
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
 jenkins_base_url = "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master"
 
 def download_json(url)
-    puts "Fetching #{url}"
-    response = Net::HTTP.get(URI(url))
-    JSON.parse(response)
+  puts "Fetching #{url}"
+  response = Net::HTTP.get(URI(url))
+  JSON.parse(response)
 end
 
 def calculate_hash(url)
-    puts "Fetching #{url}"
-    uri = URI.parse(url)
-    host = uri.host.downcase
-    Net::HTTP.start(host) do |http|
-        resp = http.get(uri.path)
-        open("temp.tgz", "wb") do |file|
-            file.write(resp.body)
-        end
+  puts "Fetching #{url}"
+  uri = URI.parse(url)
+  host = uri.host.downcase
+  Net::HTTP.start(host) do |http|
+    resp = http.get(uri.path)
+    File.open("temp.tgz", "wb") do |file|
+      file.write(resp.body)
     end
-    return Digest::SHA256.hexdigest File.read "temp.tgz"
+  end
+  return Digest::SHA256.hexdigest File.read "temp.tgz"
 end
 
 def update_formula(formula_file, url, new_hash)
-    Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
-      File.open(formula_file).each do |line|
-        tempfile.puts line.gsub(/(\s*url\s*)".*"$/, '\1' + "\"#{url}\"")
-        tempfile.puts line.gsub(/(\s*sha256\s*)".*"$/, '\1' + "\"#{new_hash}\"")
-      end
-      tempfile.close
-      FileUtils.mv tempfile.path, formula_file
+  Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
+    File.open(formula_file).each do |line|
+      tempfile.puts line.gsub(/(\s*url\s*)".*"$/, '\1' + "\"#{url}\"")
+      tempfile.puts line.gsub(/(\s*sha256\s*)".*"$/, '\1' + "\"#{new_hash}\"")
     end
+    tempfile.close
+    FileUtils.mv tempfile.path, formula_file
   end
+end
 
 last_build = File.read(last_build_file)
 
 job = download_json("#{jenkins_base_url}/api/json")
 
 if job["lastBuild"]["number"] <= last_build.to_i
-    puts "Last build is #{job["lastBuild"]["number"]}, already inspected"
-    return
+  puts "Last build is #{job["lastBuild"]["number"]}, already inspected"
+  return
 else
-    puts "Last build is #{job["lastBuild"]["number"]}, newer than #{last_build.to_i}"
+  puts "Last build is #{job["lastBuild"]["number"]}, newer than #{last_build.to_i}"
 end
 
 current_url = "-1"
 current_sha256 = "-1"
 
 IO.foreach(formula_file) do |line|
-    current_url    = line.match(/\s*url\s*"(.*)"$/)[1] if (line[/url/])
-    current_sha256 = line.match(/\s*sha256\s*"(.*)"$/)[1] if (line[/sha256/])
+  current_url    = line.match(/\s*url\s*"(.*)"$/)[1]    if line[/url/]
+  current_sha256 = line.match(/\s*sha256\s*"(.*)"$/)[1] if line[/sha256/]
 end
 
 puts "Found    URL \"#{current_url}\""
@@ -64,35 +65,33 @@ puts "Found SHA256 \"#{current_sha256}\""
 
 builds = job["builds"]
 builds.each do |build|
-    build_num = build['number']
-    puts "Inspecting build #{build_num}"
-    build_details = download_json("#{jenkins_base_url}/#{build_num}/api/json")
+  build_num = build["number"]
+  puts "Inspecting build #{build_num}"
+  build_details = download_json("#{jenkins_base_url}/#{build_num}/api/json")
     
-    next unless build_details["result"] == "SUCCESS"
+  next unless build_details["result"] == "SUCCESS"
         
-    build_details["artifacts"].each do |artifact|
-        file_name = artifact["fileName"]
+  build_details["artifacts"].each do |artifact|
+    file_name = artifact["fileName"]
     
-        next unless file_name.match?(/^apache-maven-[^wrapper].*-bin\.tar\.gz$/)
+    next unless file_name.match?(/^apache-maven-[^wrapper].*-bin\.tar\.gz$/)
 
-        puts "Artifact #{file_name} found"
+    puts "Artifact #{file_name} found"
     
-        url = "#{jenkins_base_url}/#{build["number"]}/artifact/#{artifact["relativePath"]}"
-        puts "Artifact location is #{url}"
+    url = "#{jenkins_base_url}/#{build["number"]}/artifact/#{artifact["relativePath"]}"
+    puts "Artifact location is #{url}"
 
-        puts "Calculating SHA-256 hash"
-        new_hash = calculate_hash(url)
+    puts "Calculating SHA-256 hash"
+    new_hash = calculate_hash(url)
 
-        puts "Updating formula with new URL #{url} and SHA-256 hash #{new_hash}"
-        update_formula(formula_file, url, new_hash)
+    puts "Updating formula with new URL #{url} and SHA-256 hash #{new_hash}"
+    update_formula(formula_file, url, new_hash)
 
-        puts "Updating last inspected build: #{build_num}"
-        File.delete(last_build_file) if File.exist?(last_build_file)
-        open(last_build_file, "w") do |f|
-            f << build_num
-        end
-        return
+    puts "Updating last inspected build: #{build_num}"
+    File.delete(last_build_file) if File.exist?(last_build_file)
+    File.open(last_build_file, "w") do |f|
+      f << build_num
     end
+    return
+  end
 end
-
-
