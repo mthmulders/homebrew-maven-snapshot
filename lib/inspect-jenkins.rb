@@ -10,7 +10,6 @@ require "uri"
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
 jenkins_base_url = "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master"
-temp_file = "temp.tgz"
 
 def download_json(url)
   puts "Fetching #{url}"
@@ -19,6 +18,7 @@ def download_json(url)
 end
 
 def calculate_hash(url)
+  temp_file = "temp.tgz"
   puts "Fetching #{url}"
   uri = URI.parse(url)
   host = uri.host.downcase
@@ -96,6 +96,6 @@ builds.each do |build|
     File.open(last_build_file, "w") do |f|
       f << build_num
     end
-    return
+    break
   end
 end
