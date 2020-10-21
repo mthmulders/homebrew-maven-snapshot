@@ -22,7 +22,7 @@ def calculate_hash(url)
   URI.open(url) do |tempfile|
     digest.update File.read(tempfile.path)
   end
-  digest.hexdigest()
+  digest.hexdigest
 end
 
 def update_formula(formula_file, url, new_hash, new_version)
