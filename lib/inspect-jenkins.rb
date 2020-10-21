@@ -27,7 +27,7 @@ def calculate_hash(url)
       file.write(resp.body)
     end
   end
-  return Digest::SHA256.hexdigest File.read "temp.tgz"
+  Digest::SHA256.hexdigest File.read "temp.tgz"
 end
 
 def update_formula(formula_file, url, new_hash)
@@ -68,16 +68,16 @@ builds.each do |build|
   build_num = build["number"]
   puts "Inspecting build #{build_num}"
   build_details = download_json("#{jenkins_base_url}/#{build_num}/api/json")
-    
+
   next unless build_details["result"] == "SUCCESS"
-        
+
   build_details["artifacts"].each do |artifact|
     file_name = artifact["fileName"]
-    
+
     next unless file_name.match?(/^apache-maven-[^wrapper].*-bin\.tar\.gz$/)
 
     puts "Artifact #{file_name} found"
-    
+
     url = "#{jenkins_base_url}/#{build["number"]}/artifact/#{artifact["relativePath"]}"
     puts "Artifact location is #{url}"
 
