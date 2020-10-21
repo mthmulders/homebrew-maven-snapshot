@@ -104,4 +104,5 @@ builds.each do |build|
     end
     break
   end
+  break
 end
