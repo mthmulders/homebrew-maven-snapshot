@@ -37,8 +37,8 @@ def update_formula(formula_file, url, new_hash)
   Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
     File.open(formula_file).each do |line|
       tempfile.puts line
-        .gsub(/(\s*url\s*)".*"$/, '\1' + "\"#{url}\"")
-        .gsub(/(\s*sha256\s*)".*"$/, '\1' + "\"#{new_hash}\"")
+        .gsub(/(\s*url\s*)".*"$/, "\\1\"#{url}\"")
+        .gsub(/(\s*sha256\s*)".*"$/, "\\1"\"#{new_hash}\"")
     end
     tempfile.close
     FileUtils.mv tempfile.path, formula_file
