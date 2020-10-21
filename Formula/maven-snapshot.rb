@@ -7,7 +7,7 @@ class MavenSnapshot < Formula
 
   depends_on "openjdk"
 
-  # Copied from the official Maven formula 
+  # Copied from the official Maven formula
   def install
     # Remove windows files
     rm_f Dir["bin/*.cmd"]
@@ -29,7 +29,7 @@ class MavenSnapshot < Formula
     end
   end
 
-  # Copied from the official Maven formula 
+  # Copied from the official Maven formula
   test do
     (testpath/"pom.xml").write <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
