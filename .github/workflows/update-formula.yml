@@ -30,7 +30,7 @@ jobs:
     - name: Update Formula
       shell: bash
       run: |
-        git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
         git add Formula/maven-snapshot.rb last-build.txt
         git commit -m "Update to latest Maven snapshot"
+        git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
         git push github HEAD:${GITHUB_REF}
