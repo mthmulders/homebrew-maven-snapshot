@@ -16,3 +16,6 @@ Or `brew tap mthmulders/maven-snapshot` and then `brew install <formula>`.
 
 ## Possible improvements
 In order to not request too much data from Jenkins, it might be wise to [control the amount of data we fetch](https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/api/).
+
+## Development
+Install [act](https://github.com/nektos/act/), then run `act -j update-formula`
