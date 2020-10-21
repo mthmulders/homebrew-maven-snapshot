@@ -1,4 +1,4 @@
-# Maven snapshot - Homebrew tap
+# Maven snapshot builds - Homebrew tap
 
 ![brew test-bot](https://github.com/mthmulders/homebrew-maven-snapshot/workflows/brew%20test-bot/badge.svg)
 
@@ -7,9 +7,9 @@ Doesn't work (yet).
 I'm still figuring out how to actually _make_ it work.
 
 ## How do I install these formulae?
-`brew install mthmulders/maven-snapshot/<formula>`
+`brew install mthmulders/maven-snapshot/maven-snapshot`
 
-Or `brew tap mthmulders/maven-snapshot` and then `brew install <formula>`.
+Or `brew tap mthmulders/maven-snapshot` and then `brew install maven-snapshot`.
 
 ## Documentation
 `brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
