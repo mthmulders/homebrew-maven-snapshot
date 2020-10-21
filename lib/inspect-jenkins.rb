@@ -4,8 +4,7 @@
 require "json"
 require "digest"
 require "net/http"
-require "tempfile"
-require "uri"
+require "open-uri"
 
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
@@ -18,19 +17,12 @@ def download_json(url)
 end
 
 def calculate_hash(url)
-  temp_file = "temp.tgz"
   puts "Fetching #{url}"
-  uri = URI.parse(url)
-  host = uri.host.downcase
-  Net::HTTP.start(host) do |http|
-    resp = http.get(uri.path)
-    File.open(temp_file, "wb") do |file|
-      file.write(resp.body)
-    end
+  digest = Digest::SHA256.new
+  URI.open(url) do |tempfile| 
+    digest.update File.read(tempfile.path)
   end
-  hash = Digest::SHA256.hexdigest File.read temp_file
-  File.delete(temp_file)
-  hash
+  digest.hexdigest()
 end
 
 def update_formula(formula_file, url, new_hash, new_version)
