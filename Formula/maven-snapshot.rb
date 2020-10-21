@@ -3,7 +3,7 @@ class MavenSnapshot < Formula
   homepage "https://maven.apache.org/"
   url "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/40/artifact/org/apache/maven/apache-maven/3.7.0-SNAPSHOT/apache-maven-3.7.0-SNAPSHOT-bin.tar.gz"
   version "3.7.0-SNAPSHOT"
-  sha256 "9e67afce6b38e82c98beb38a8e27e3e2bc6ad75fa7fff1c2ff6a191866755836"
+  sha256 "d0906965c0600b2ecd78a85576ee8f2e79d85794d954baba6384192741d4051a"
   license "Apache-2.0"
   revision 1
 
