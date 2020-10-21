@@ -92,7 +92,7 @@ builds.each do |build|
     new_hash = calculate_hash(url)
 
     puts "Determining version"
-    new_version = url.gsub(/.*apache\-maven\-(.*)\-bin\.tar\.gz/, "\\1")
+    new_version = url.gsub(/.*apache-maven-(.*)-bin\.tar\.gz/, "\\1")
 
     puts "Updating formula with version #{new_version}, location #{url} and SHA-256 hash #{new_hash}"
     update_formula(formula_file, url, new_hash, new_version)
