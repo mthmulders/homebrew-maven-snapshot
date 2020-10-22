@@ -30,7 +30,18 @@ But that requires changes to how Jenkins is working and that might be a bit hard
 * [ ] Eventually, this formula might be merged with the [official `maven` formula](https://github.com/Homebrew/homebrew-core/blob/master/Formula/maven.rb), leveraging its `--head` option.
 
 ## Development
-Install [act](https://github.com/nektos/act/).
-Remove the two `sudo` instructions in **.github/workflows/update-formula.yml** (`act` already runs GitHub Actions as root).
-Run `act -j update-formula` to simulate a GitHub Action run.
+First, install [act](https://github.com/nektos/act/).
+Since the images used by _act_ do not include Ruby or Git, you may want to add an additional step to **.github/workflows/update-formula.yml**, right after the **Checkout** step:
+
+```yml
+    - name: Install Ruby and Git
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ruby git
+        echo ""
+        ruby -v
+        git --version
+```
+
+Now you can run `act -j update-formula` to simulate a GitHub Action run.
 The `git push` will fail, alternatively replace it with `cat Formula/maven-snapshot.rb` to inspect the updated Homebrew formula.

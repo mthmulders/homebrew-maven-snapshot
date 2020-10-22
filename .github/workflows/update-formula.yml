@@ -11,13 +11,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install Ruby
+    - name: Configure Git
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ruby git
-        echo ""
-        ruby -v
-        git --version
         git config --global user.email "mthmulders@noreply.github.com"
         git config --global user.name "Maarten Mulders"
 
@@ -33,4 +28,3 @@ jobs:
         git add Formula/maven-snapshot.rb last-build.txt
         git commit -m "Update to latest Maven snapshot" || exit 0
         git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
-        git push github HEAD:${GITHUB_REF}
