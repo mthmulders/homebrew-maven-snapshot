@@ -25,13 +25,14 @@ def calculate_hash(url)
   digest.hexdigest
 end
 
-def update_formula(formula_file, url, new_hash, new_version)
+def update_formula(formula_file, url, new_hash, new_version, new_revision)
   Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
     File.open(formula_file).each do |line|
       tempfile.puts line
         .gsub(/(\s*url\s*)".*"$/, "\\1\"#{url}\"")
         .gsub(/(\s*sha256\s*)".*"$/, "\\1\"#{new_hash}\"")
         .gsub(/(\s*version\s*)".*"$/, "\\1\"#{new_version}\"")
+        .gsub(/(\s*revision\s*)".*"$/, "\\1\"#{new_revision}\"")
     end
     tempfile.close
     FileUtils.mv tempfile.path, formula_file
@@ -87,7 +88,7 @@ builds.each do |build|
     new_version = url.gsub(/.*apache-maven-(.*)-bin\.tar\.gz/, "\\1")
 
     puts "Updating formula with version #{new_version}, location #{url} and SHA-256 hash #{new_hash}"
-    update_formula(formula_file, url, new_hash, new_version)
+    update_formula(formula_file, url, new_hash, new_version, build_num)
 
     puts "Updating last inspected build: #{build_num}"
     File.delete(last_build_file) if File.exist?(last_build_file)

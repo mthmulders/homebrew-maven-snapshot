@@ -5,7 +5,7 @@ class MavenSnapshot < Formula
   version "3.7.0-SNAPSHOT"
   sha256 "aba31dcce7dafaad9542afe61d620c6e4a3752ed1028abba797a2ccf494b5530"
   license "Apache-2.0"
-  revision 1
+  revision ""
 
   depends_on "openjdk"
 
