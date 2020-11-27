@@ -74,7 +74,7 @@ builds.each do |build|
   build_details["artifacts"].each do |artifact|
     file_name = artifact["fileName"]
 
-    next unless file_name.match?(/^apache-maven-[^wrapper].*-bin\.tar\.gz$/)
+    next unless file_name.match?(/^apache-maven-(?:^wrapper).*-bin\.tar\.gz$/)
 
     puts "Artifact #{file_name} found"
 
