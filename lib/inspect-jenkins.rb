@@ -19,7 +19,7 @@ end
 def calculate_hash(url)
   puts "Fetching #{url}"
   digest = Digest::SHA256.new
-  URI.parse(url).open() do |tempfile|
+  URI.parse(url).open do |tempfile|
     digest.update File.read(tempfile.path)
   end
   digest.hexdigest
