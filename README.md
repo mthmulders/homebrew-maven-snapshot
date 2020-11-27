@@ -23,6 +23,20 @@ Instead, please report such feedback at [the Apache Software Foundation JIRA](ht
 
 Or `brew tap mthmulders/maven-snapshot` and then `brew install maven-snapshot`.
 
+## Switching between "stable" and "snapshot"
+To use the latest stable Maven version installed that Brew installed for you, issue
+```sh
+brew unlink maven-snapshot && brew link maven
+```
+
+To go back to the (possibly unstable) snapshot, issue
+```sh
+brew unlink maven && brew link maven-snapshot
+```
+
+## Keeping up-to-date
+Simple: issue `brew upgrade` and you'll receive the latest build that passed the extensive [Maven integration test suite](https://github.com/apache/maven-integration-testing/).
+
 ## Possible improvements
 * [ ] In order to not request too much data from Jenkins, it might be wise to [control the amount of data we fetch](https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master/api/).
 * [ ] Instead of polling Jenkins for data, it might be more elegant and efficient to _push_ changes to the formula.
