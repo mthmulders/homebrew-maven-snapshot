@@ -1,7 +1,5 @@
 name: brew test-bot
-on:
-  push:
-  pull_request:
+on: [ push, pull_request ]
 jobs:
   test-bot:
     runs-on: ${{ matrix.os }}
