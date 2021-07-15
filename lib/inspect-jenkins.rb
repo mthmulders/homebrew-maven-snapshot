@@ -8,7 +8,7 @@ require "open-uri"
 
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
-jenkins_base_url = "https://ci-builds.apache.org/job/Maven/job/maven-box/job/maven/job/master"
+jenkins_base_url = "https://ci-maven.apache.org/job/Maven/job/maven-box/job/maven/job/master"
 
 def download_json(url)
   puts "Fetching #{url}"
