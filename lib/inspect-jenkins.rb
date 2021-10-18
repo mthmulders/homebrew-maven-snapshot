@@ -53,7 +53,7 @@ end
 current_url = "-1"
 current_sha256 = "-1"
 
-IO.foreach(formula_file) do |line|
+File.foreach(formula_file) do |line|
   current_url    = line.match(/\s*url\s*"(.*)"$/)[1]    if line[/url/]
   current_sha256 = line.match(/\s*sha256\s*"(.*)"$/)[1] if line[/sha256/]
 end
