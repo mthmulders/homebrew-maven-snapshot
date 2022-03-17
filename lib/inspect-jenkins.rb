@@ -87,8 +87,13 @@ builds.each do |build|
     puts "Determining version"
     new_version = url.gsub(/.*apache-maven-(.*)-bin\.tar\.gz/, "\\1")
 
-    puts "Updating formula with version #{new_version}, revision #{build_num}, and SHA-256 hash #{new_hash}"
-    update_formula(formula_file, url, new_hash, new_version, build_num.to_i)
+    new_revision = build_num.to_i + 328
+    puts "Updating formula"
+    puts "    version #{new_version}"
+    puts "    Jenkins job #{build_num}"
+    puts "    Brew revision #{new_revision}"
+    puts "    SHA-256 hash #{new_hash}"
+    update_formula(formula_file, url, new_hash, new_version, new_revision)
 
     puts "Updating last inspected build: #{build_num}"
     File.delete(last_build_file) if File.exist?(last_build_file)
