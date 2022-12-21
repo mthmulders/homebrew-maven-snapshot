@@ -52,7 +52,6 @@ else
   puts "Last revision is #{new_revision}, newer than #{last_revision}"
 end
 
-
 # Compute SHA256 hash
 new_hash = calculate_hash(binary_url)
 
