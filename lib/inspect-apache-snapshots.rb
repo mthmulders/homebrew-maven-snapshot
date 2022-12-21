@@ -11,13 +11,13 @@ last_revision_file = "last-revision.txt"
 snapshot_repo_base_url = "https://repository.apache.org/content/groups/snapshots"
 
 def download_xml(url)
-    puts "Fetching #{url}"
-    response = Net::HTTP.get(URI(url))
-    REXML::Document.new(response)
+  puts "Fetching #{url}"
+  response = Net::HTTP.get(URI(url))
+  REXML::Document.new(response)
 end
 
 def extract_xpath(document, query)
-    REXML::XPath.first(document, query)
+  REXML::XPath.first(document, query)
 end
 
 # First, inspect the Maven metadata for org.apache.maven:apache-maven from
@@ -42,10 +42,10 @@ binary_url = "#{snapshot_repo_base_url}/org/apache/maven/apache-maven/#{latest_v
 # Compare with last revision - if not changed, we're done here
 last_revision = File.read(last_revision_file)
 if new_revision.to_s.to_i <= last_revision.to_i
-    puts "Last revision is #{last_revision}, already up to date"
-    return
+  puts "Last revision is #{last_revision}, already up to date"
+  return
 else
-    puts "Last revision is #{new_revision}, newer than #{last_revision}"
+  puts "Last revision is #{new_revision}, newer than #{last_revision}"
 end
 
 
