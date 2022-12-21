@@ -33,7 +33,10 @@ puts "Latest version is #{latest_version}"
 version_metadata = download_xml("#{snapshot_repo_base_url}/#{apache_maven_path}/#{latest_version}/maven-metadata.xml")
 
 # Extract /metadata/versioning/snapshotVersions with ./classifier = bin and ./extension = tar.gz
-artifacts = extract_xpath(version_metadata, "/metadata/versioning/snapshotVersions/snapshotVersion[./classifier='bin' and ./extension='tar.gz']")
+artifacts = extract_xpath(
+  version_metadata,
+  "/metadata/versioning/snapshotVersions/snapshotVersion[./classifier='bin' and ./extension='tar.gz']"
+)
 
 # Find all necessary metadata
 new_revision = extract_xpath(artifacts, "./updated/text()")
