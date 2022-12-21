@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "net/http"
-require 'rexml/document'
+require "rexml/document"
 
 require "./lib/shared.rb"
 
