@@ -19,7 +19,7 @@ jobs:
     - name: Inspect recent Jenkins builds
       shell: bash
       run: |
-        ./lib/inspect-jenkins.rb
+        ./lib/inspect-apache-snapshots.rb
 
     # See https://github.community/t/how-does-one-commit-from-an-action/16127/2
     - name: Update Formula
