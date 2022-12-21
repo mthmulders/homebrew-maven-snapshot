@@ -75,7 +75,7 @@ builds.each do |build|
     update_formula(formula_file, url, new_hash, new_version, new_revision)
 
     puts "Updating last inspected build: #{build_num}"
-    File.delete(last_build_file) if File.exist?(last_build_file)
+    FileUtils.rm_f(last_build_file)
     File.open(last_build_file, "w") do |f|
       f << build_num
     end

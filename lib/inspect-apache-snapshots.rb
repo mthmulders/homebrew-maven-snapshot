@@ -63,7 +63,7 @@ puts "    SHA-256 hash #{new_hash}"
 update_formula(formula_file, binary_url, new_hash, new_version, new_revision)
 
 puts "Updating last inspected revision: #{new_revision}"
-File.delete(last_revision_file) if File.exist?(last_revision_file)
+FileUtils.rm_f(last_revision_file)
 File.open(last_revision_file, "w") do |f|
   f << new_revision
 end
