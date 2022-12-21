@@ -26,7 +26,6 @@ def update_formula(formula_file, url, new_hash, new_version, new_revision)
         .gsub(/(\s*url\s*)".*"$/, "\\1\"#{url}\"")
         .gsub(/(\s*sha256\s*)".*"$/, "\\1\"#{new_hash}\"")
         .gsub(/(\s*version\s*)".*"$/, "\\1\"#{new_version}\"")
-        .gsub(/(\s*revision\s*)\d*$/, "\\1#{new_revision}")
     end
     tempfile.close
     FileUtils.mv tempfile.path, formula_file
