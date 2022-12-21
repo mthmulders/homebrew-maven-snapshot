@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest"
 require "net/http"
 require "open-uri"
