@@ -19,7 +19,7 @@ def calculate_hash(url)
 end
 
 # Updates a formula with with a new download URL, hash, version and revision.
-def update_formula(formula_file, url, new_hash, new_version, new_revision)
+def update_formula(formula_file, url, new_hash, new_version)
   Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
     File.open(formula_file).each do |line|
       tempfile.puts line

@@ -58,9 +58,8 @@ new_hash = calculate_hash(binary_url)
 # Update formula
 puts "Updating formula"
 puts "    version #{new_version}"
-puts "    Brew revision #{new_revision}"
 puts "    SHA-256 hash #{new_hash}"
-update_formula(formula_file, binary_url, new_hash, new_version, new_revision)
+update_formula(formula_file, binary_url, new_hash, new_version)
 
 puts "Updating last inspected revision: #{new_revision}"
 FileUtils.rm_f(last_revision_file)
