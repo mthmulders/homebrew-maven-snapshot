@@ -6,6 +6,8 @@ require "digest"
 require "net/http"
 require "open-uri"
 
+require "./lib/shared.rb"
+
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
 jenkins_base_url = "https://ci-maven.apache.org/job/Maven/job/maven-box/job/maven/job/master"
@@ -14,29 +16,6 @@ def download_json(url)
   puts "Fetching #{url}"
   response = Net::HTTP.get(URI(url))
   JSON.parse(response)
-end
-
-def calculate_hash(url)
-  puts "Fetching #{url}"
-  digest = Digest::SHA256.new
-  URI.parse(url).open do |tempfile|
-    digest.update File.read(tempfile.path)
-  end
-  digest.hexdigest
-end
-
-def update_formula(formula_file, url, new_hash, new_version, new_revision)
-  Tempfile.open(".#{File.basename(formula_file)}", File.dirname(formula_file)) do |tempfile|
-    File.open(formula_file).each do |line|
-      tempfile.puts line
-        .gsub(/(\s*url\s*)".*"$/, "\\1\"#{url}\"")
-        .gsub(/(\s*sha256\s*)".*"$/, "\\1\"#{new_hash}\"")
-        .gsub(/(\s*version\s*)".*"$/, "\\1\"#{new_version}\"")
-        .gsub(/(\s*revision\s*)\d*$/, "\\1#{new_revision}")
-    end
-    tempfile.close
-    FileUtils.mv tempfile.path, formula_file
-  end
 end
 
 last_build = File.read(last_build_file)
