@@ -4,7 +4,7 @@
 require "net/http"
 require "rexml/document"
 
-require "./lib/shared.rb"
+require "./lib/shared"
 
 formula_file = "Formula/maven-snapshot.rb"
 last_revision_file = "last-revision.txt"

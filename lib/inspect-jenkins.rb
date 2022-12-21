@@ -6,7 +6,7 @@ require "digest"
 require "net/http"
 require "open-uri"
 
-require "./lib/shared.rb"
+require "./lib/shared"
 
 formula_file = "Formula/maven-snapshot.rb"
 last_build_file = "last-build.txt"
