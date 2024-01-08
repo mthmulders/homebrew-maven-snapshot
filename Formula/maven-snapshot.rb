@@ -1,9 +1,9 @@
 class MavenSnapshot < Formula
   desc "Java-based project management (latest snapshot)"
   homepage "https://maven.apache.org/"
-  url "https://repository.apache.org/content/groups/snapshots/org/apache/maven/apache-maven/4.0.0-alpha-11-SNAPSHOT/apache-maven-4.0.0-alpha-11-20240108.085226-8-bin.tar.gz"
-  version "4.0.0-alpha-11-20240108.085226-8"
-  sha256 "aa70b5132383f093de40919eb8151b73913d65129572bcb57292301763ea03f4"
+  url "https://repository.apache.org/content/groups/snapshots/org/apache/maven/apache-maven/4.0.0-alpha-11-SNAPSHOT/apache-maven-4.0.0-alpha-11-20240108.103837-10-bin.tar.gz"
+  version "4.0.0-alpha-11-20240108.103837-10"
+  sha256 "90a00ceb39a1f35d9824ca9088a1cf989c68adc94a8aaa8d4daa27cb3682cf80"
   license "Apache-2.0"
 
   depends_on "openjdk"
