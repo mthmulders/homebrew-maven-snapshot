@@ -1,6 +1,6 @@
 # Maven snapshot builds - Homebrew tap
 
-![brew test-bot](https://github.com/mthmulders/homebrew-maven-snapshot/workflows/brew%20test-bot/badge.svg)
+[![brew test-bot](https://github.com/mthmulders/homebrew-maven-snapshot/workflows/brew%20test-bot/badge.svg)](https://github.com/mthmulders/homebrew-maven-snapshot/actions/workflows/tests.yml)
 
 ## Status
 The tap seems to work quite well and is automatically updated with newer snapshot builds of Maven as soon as they are built.
