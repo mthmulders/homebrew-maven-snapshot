@@ -48,7 +48,7 @@ builds.each do |build|
   status = build_details["result"]
   puts "... status is #{status}"
 
-  next unless status == "SUCCESS"
+  next if status != "SUCCESS"
 
   build_details["artifacts"].each do |artifact|
     file_name = artifact["fileName"]
