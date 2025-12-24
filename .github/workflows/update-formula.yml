@@ -16,7 +16,7 @@ jobs:
         git config --global user.email "mthmulders@noreply.github.com"
         git config --global user.name "Maarten Mulders"
 
-    - name: Inspect recent Jenkins builds
+    - name: Inspect Apache Snapshots repository
       shell: bash
       run: |
         ./lib/inspect-apache-snapshots.rb
